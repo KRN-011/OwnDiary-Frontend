@@ -3,9 +3,9 @@ import { Inter } from "next/font/google";
 
 import "./globals.css";
 
-import MainLayout from "@/components/layouts";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { LoadingProvider } from "@/components/providers/loading-provider";
+import { Toaster } from "@/components/ui/sonner";
+import MainProvider from "@/components/providers/MainProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,11 +31,10 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <LoadingProvider>
-            <MainLayout>
+            <MainProvider>
               {children}
-            </MainLayout>
-          </LoadingProvider>
+            </MainProvider>
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>
