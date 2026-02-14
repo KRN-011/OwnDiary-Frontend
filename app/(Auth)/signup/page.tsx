@@ -1,10 +1,10 @@
 import GuestGuard from "@/components/guards/GuestGuard";
-import Login from "@/views/auth/login";
+import Signup from "@/views/auth/signup";
 
 export default function Page() {
   return (
     <GuestGuard>
-      <Login />
+      <Signup />
     </GuestGuard>
   );
 }

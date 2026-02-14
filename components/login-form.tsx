@@ -1,46 +1,68 @@
-"use client"
+"use client";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { showToast } from "@/lib/toast"
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { showToast } from "@/lib/toast";
+import { useForm } from "react-hook-form";
+import { LoginSchema, loginSchema } from "@/schemas/authScehma";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/context/AuthContext";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  
+  // auth context
+  const { login } = useAuth();
+
+  // react hook form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: zodResolver(loginSchema),
+    mode: "onChange",
+  });
+
   // handle submit login form
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    showToast.success('Testing')
-  }
+  const onSubmit = async (data: LoginSchema) => {
+    await login({ email: data.email, password: data.password });
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
-            Login with your email and password
-          </CardDescription>
+          <CardDescription>Login with your email and password</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin}>
-            <FieldGroup>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {/* To hide autocomplete fields in browsers */}
+            <div className="hidden">
+              <input type="password" name="password" />
+              <input type="text" name="email" />
+            </div>
+            <FieldGroup className="flex flex-col gap-5">
               {/* <Field>
                 <Button variant="outline" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -64,16 +86,21 @@ export function LoginForm({
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
               </FieldSeparator> */}
-              <Field>
+              <Field className="flex flex-col gap-2">
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
+                  {...register("email")}
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
-                  required
+                  placeholder="johndoe@example.com"
                 />
+                {errors.email && (
+                  <p className="text-destructive text-sm">
+                    {errors.email.message}
+                  </p>
+                )}
               </Field>
-              <Field>
+              <Field className="flex flex-col gap-2">
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                   {/* <a
@@ -83,12 +110,21 @@ export function LoginForm({
                     Forgot your password?
                   </a> */}
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  {...register("password")}
+                  id="password"
+                  type="password"
+                />
+                {errors.password && (
+                  <p className="text-destructive text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
               </Field>
               <Field>
                 <Button type="submit">Login</Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account? <a href="signup">Sign up</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
@@ -100,5 +136,5 @@ export function LoginForm({
         and <a href="#">Privacy Policy</a>.
       </FieldDescription> */}
     </div>
-  )
+  );
 }
