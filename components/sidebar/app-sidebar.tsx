@@ -18,6 +18,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
 
 const data = {
   user: {
@@ -46,7 +47,9 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
+  // hooks
   const pathname = usePathname()
+  const { user } = useAuth();
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -57,7 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} pathname={pathname} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user.data} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

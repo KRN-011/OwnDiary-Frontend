@@ -1,5 +1,5 @@
 import { API_QUERIES } from '@/constants/apiQueries'
-import { GetCurrentUser, Login, Logout, Signup } from '@/services/apiServices/auth'
+import { GetCurrentUser, Login, Logout, Signup } from '@/services/auth'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 
