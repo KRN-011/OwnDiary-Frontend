@@ -44,8 +44,12 @@ export default function ExpenseTable<TData, TValue>({
   ExpensesLoading,
   data,
 }: ExpenseTableProps<TData, TValue>) {
+
+  // Master Expenses
+  const masterExpenses = data?.filter((item: any) => !item.parentId)
+
   const table = useReactTable({
-    data,
+    data: masterExpenses,
     columns,
     pageCount: Math.ceil(total / limit),
 
