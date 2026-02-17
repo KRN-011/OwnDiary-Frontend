@@ -7,5 +7,8 @@ export const API_QUERIES = {
     },
     EXPENSE_CAT: {
         getAllExpenseCategories: 'get-all-expense-categories'
+    },
+    EXPENSE: {
+        getAllExpenses: 'get-all-expenses'
     }
 }

@@ -20,18 +20,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Plus, Upload } from "lucide-react"
+import { Pencil, Upload } from "lucide-react"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CreateExpenseSchema, createExpenseSchema } from "@/schemas/expenseSchema"
-import { useCreateExpense } from "@/hooks/apiHooks/Expenses"
-import { CreateExpensePayload } from "@/types/expenseTypes"
+import { useUpdateExpense } from "@/hooks/apiHooks/Expenses"
+import { CreateExpensePayload, Expense } from "@/types/expenseTypes"
 import { showToast } from "@/lib/toast"
 import { useQueryClient } from "@tanstack/react-query"
 import { API_QUERIES } from "@/constants/apiQueries"
 import { useGetAllExpenseCategories } from "@/hooks/apiHooks/Expense-category"
 
-export default function CreateExpenseModal() {
+export default function EditExpenseModal({ expense }: { expense: Expense }) {
 
     // hooks
     const useQuery = useQueryClient()
@@ -41,16 +41,16 @@ export default function CreateExpenseModal() {
     const [open, setOpen] = useState(false)
 
     // API hooks
-    const { mutateAsync: createExpenseMutation } = useCreateExpense()
+    const { mutateAsync: updateExpenseMutation } = useUpdateExpense()
     const { data: ExpensesCatData, isLoading: ExpensesCatLoading } = useGetAllExpenseCategories()
 
     // react hook form
     const { register, handleSubmit, control, formState: { errors }, reset } = useForm({
         defaultValues: {
-            title: "",
-            description: "",
-            amount: 0,
-            category: "",
+            title: expense.title,
+            description: expense.description,
+            amount: expense.amount,
+            category: expense.categoryId,
             images: [],
         },
         resolver: zodResolver(createExpenseSchema),
@@ -74,10 +74,10 @@ export default function CreateExpenseModal() {
                 imageAttachments: images
             }
 
-            const response = await createExpenseMutation({ payload })
+            const response = await updateExpenseMutation({ id: expense.id, payload })
 
             if (response.success) {
-                showToast.success("Expense created successfully")
+                showToast.success("Expense updated successfully")
                 useQuery.invalidateQueries({ queryKey: [API_QUERIES.EXPENSE.getAllExpenses] })
                 reset()
                 setOpen(false)
@@ -91,9 +91,8 @@ export default function CreateExpenseModal() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button onClick={() => setOpen(true)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Expense
+                <Button variant="outline" size={"icon"} onClick={() => setOpen(true)}>
+                    <Pencil className="h-4 w-4" />
                 </Button>
             </DialogTrigger>
 

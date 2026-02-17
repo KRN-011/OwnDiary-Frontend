@@ -1,9 +1,6 @@
 "use client"
 
 import CreateExpenseModal from "@/components/modals/expenses/CreateExpenseModal"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-
 
 export default function ExpenseHeader() {
     return (

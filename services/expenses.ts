@@ -1,13 +1,13 @@
 import { API_ROUTES } from "@/constants/apiRoutes"
 import { api } from "@/lib/axios"
-import { Expense } from "@/types/expenseTypes"
+import { CreateExpensePayload, Expense } from "@/types/expenseTypes"
 import { CommonGetApiResponse, CommonParams } from "@/types/generalTypes"
 
 
 // POST - create expense
-export const createExpense = async () => {
+export const createExpense = async ({ payload }: { payload: CreateExpensePayload }) => {
     try {
-        const response = await api.post(API_ROUTES.EXPENSES.createExpense)
+        const response = await api.post(API_ROUTES.EXPENSES.createExpense, payload)
         return response.data
     } catch (error) {
         throw error
@@ -35,9 +35,9 @@ export const createSubExpenses = async () => {
 }
 
 // PUT - update expense
-export const updateExpense = async ({ id }: { id: string }) => {
+export const updateExpense = async ({ id, payload }: { id: string, payload: CreateExpensePayload }) => {
     try {
-        const response = await api.put(API_ROUTES.EXPENSES.updateExpense(id))
+        const response = await api.put(API_ROUTES.EXPENSES.updateExpense(id), payload)
         return response.data
     } catch (error) {
         throw error

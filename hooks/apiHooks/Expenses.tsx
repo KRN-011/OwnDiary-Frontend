@@ -1,4 +1,6 @@
+import { API_QUERIES } from "@/constants/apiQueries"
 import { createExpense, createSubExpenses, deleteExpense, getAllExpenses, updateExpense } from "@/services/expenses"
+import { CreateExpensePayload } from "@/types/expenseTypes"
 import { CommonParams } from "@/types/generalTypes"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
@@ -8,14 +10,14 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 // POST - create expense
 export const useCreateExpense = () => {
     return useMutation({
-        mutationFn: () => createExpense()
+        mutationFn: ({ payload }: { payload: CreateExpensePayload }) => createExpense({ payload })
     })
 }
 
 // GET - all expenses
 export const useGetAllExpenses = ({ params }: { params: CommonParams }) => {
     return useQuery({
-        queryKey: ['all-expenses', params],
+        queryKey: [API_QUERIES.EXPENSE.getAllExpenses, params],
         queryFn: () => getAllExpenses({ params })
     })
 }
@@ -30,7 +32,7 @@ export const useCreateSubExpenses = () => {
 // PUT - update expense
 export const useUpdateExpense = () => {
     return useMutation({
-        mutationFn: ({ id }: { id: string }) => updateExpense({ id })
+        mutationFn: ({ id, payload }: { id: string, payload: CreateExpensePayload }) => updateExpense({ id, payload })
     })
 }
 

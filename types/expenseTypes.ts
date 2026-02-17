@@ -19,3 +19,12 @@ export interface Expense {
   createdAt: string; 
   updatedAt: string; 
 }
+
+// Create Expense Payload
+export interface CreateExpensePayload {
+  title?: string;
+  description?: string;
+  amount?: number;
+  imageAttachments?: File[];
+  categoryId?: string;
+}

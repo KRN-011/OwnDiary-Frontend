@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useForm, useWatch } from "react-hook-form";
-import { SignupSchema, signupSchema } from "@/schemas/authScehma";
+import { SignupSchema, signupSchema } from "@/schemas/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContext";
 import { PASSWORD_CONDITIONS } from "@/constants/generalConsts";

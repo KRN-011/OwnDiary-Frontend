@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { showToast } from "@/lib/toast";
 import { useForm } from "react-hook-form";
-import { LoginSchema, loginSchema } from "@/schemas/authScehma";
+import { LoginSchema, loginSchema } from "@/schemas/authSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContext";
 
