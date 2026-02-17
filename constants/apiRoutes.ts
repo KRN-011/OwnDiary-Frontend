@@ -13,5 +13,11 @@ export const API_ROUTES = {
         createSubExpenses: '/expense/create-sub-expenses',
         updateExpense: (id: string) => `/expense/update/${id}`,
         deleteExpense: (id: string) => `/expense/delete/${id}`
+    },
+    EXPENSE_CAT: {
+        createExpenseCategory: '/expense-category/create',
+        getAllExpenseCategories: '/expense-category/get-all',
+        updateExpenseCategory: (id: string) => `/expense-category/update/${id}`,
+        deleteExpenseCategory: (id: string) => `/expense-category/delete/${id}`
     }
 }

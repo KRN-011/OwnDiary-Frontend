@@ -1,5 +1,6 @@
 "use client"
 
+import CreateExpenseModal from "@/components/modals/expenses/CreateExpenseModal"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 
@@ -19,10 +20,7 @@ export default function ExpenseHeader() {
 
             {/* Actions */}
             <div>
-                <Button variant={"default"} onClick={() => ""}>
-                    <Plus />
-                    Add Expense
-                </Button>
+                <CreateExpenseModal />
             </div>
         </div>
     )

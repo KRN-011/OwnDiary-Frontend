@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,13 +20,43 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, format } from "date-fns";
 import { type DateRange } from "react-day-picker";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { CommonGetApiResponse, CommonParams } from "@/types/generalTypes";
+import useDebounce from "@/hooks/useDebounce";
+import { GetAllExpenseCategoriesResponse } from "@/types/expenseCatTypes";
 
-export default function ExpenseFilter() {
+export default function ExpenseFilter({
+  filters,
+  setFilters,
+  ExpensesCatData,
+  ExpensesCatLoading
+}: {
+  filters: CommonParams
+  setFilters: Dispatch<SetStateAction<CommonParams>>
+  ExpensesCatData?: CommonGetApiResponse<GetAllExpenseCategoriesResponse[]>
+  ExpensesCatLoading: boolean
+}) {
+  // states
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(new Date().getFullYear(), 0, 1),
     to: new Date(),
   });
+
+  // Update filters when date changes
+  useEffect(() => {
+    if (!date) return;
+
+    const { from, to } = date;
+
+    if (!from || !to) return;
+
+    setFilters((prev) => ({
+      ...prev,
+      startDate: format(from, "yyyy-MM-dd"),
+      endDate: format(to, "yyyy-MM-dd"),
+      page: 1,
+    }));
+  }, [date, setFilters]);
 
   return (
     <>
@@ -37,25 +67,42 @@ export default function ExpenseFilter() {
             <Label htmlFor="search">Search</Label>
             <Input
               placeholder="Search by title or description"
-              className=""
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
             />
           </div>
 
           {/* Category Select Dropdown */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="category">Category</Label>
-            <Select defaultValue="all">
+            <Select value={filters.categoryId || 'all'}
+              onValueChange={(value) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  categoryId: value === "all" || value === "loading" ? "" : value,
+                  page: 1
+                }))
+              }>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select Category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
-                <SelectItem value="food">Food</SelectItem>
-                <SelectItem value="transportation">Transportation</SelectItem>
-                <SelectItem value="housing">Housing</SelectItem>
-                <SelectItem value="utilities">Utilities</SelectItem>
-                <SelectItem value="entertainment">Entertainment</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                {ExpensesCatLoading ? (
+                  <SelectItem value="loading">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  </SelectItem>
+                ) : (
+                  <>
+                    {
+                      ExpensesCatData?.data?.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category?.name}
+                        </SelectItem>
+                      ))
+                    }
+                  </>
+                )}
               </SelectContent>
             </Select>
           </div>

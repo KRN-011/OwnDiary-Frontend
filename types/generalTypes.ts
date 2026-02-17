@@ -17,7 +17,7 @@ export type CommonGetApiResponse<T> = {
     success: boolean;
     message: string;
     data: T;
-    pagination?: {
+    meta?: {
         page: number;
         limit: number;
         total: number;

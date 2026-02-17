@@ -1,6 +1,7 @@
 import { API_ROUTES } from "@/constants/apiRoutes"
 import { api } from "@/lib/axios"
-import { CommonParams } from "@/types/generalTypes"
+import { Expense } from "@/types/expenseTypes"
+import { CommonGetApiResponse, CommonParams } from "@/types/generalTypes"
 
 
 // POST - create expense
@@ -14,7 +15,7 @@ export const createExpense = async () => {
 }
 
 // GET - get all expenses
-export const getAllExpenses = async ({ params }: { params: CommonParams }) => {
+export const getAllExpenses = async ({ params }: { params: CommonParams }): Promise<CommonGetApiResponse<Expense[]>> => {
     try {
         const response = await api.get(API_ROUTES.EXPENSES.getAllExpenses, { params })
         return response.data
